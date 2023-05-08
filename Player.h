@@ -4,6 +4,7 @@
 #include <assert.h>
 #include"Input.h"
 #include"PlayerBullet.h"
+#include<list>
 
 class Player {
 public:
@@ -12,6 +13,7 @@ public:
 	void Draw(ViewProjection viewProjection);
 	void Rotate();
 	void Attack();
+	~Player();
 
 private:
 	WorldTransform worldTransform_;
@@ -19,5 +21,5 @@ private:
 	uint32_t textureHandle_ = 0u;
 	Input* input_ = nullptr;
 	float inputFloat3[3] = {0, 0, 0};
-	PlayerBullet* bullet_ = nullptr;
+	std::list<PlayerBullet*> bullets_;
 };

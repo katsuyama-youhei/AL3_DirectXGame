@@ -2,6 +2,12 @@
 #include "Calculation.h"
 #include "ImGuiManager.h"
 
+Player::~Player() { 
+	for (PlayerBullet* bullet : bullets_) {
+		delete bullet;
+	}
+}
+
 void Player::Initialize(Model* model, uint32_t textureHandle) {
 	assert(model);
 	model_ = model;
@@ -38,8 +44,8 @@ void Player::Update() {
 
 	Attack();
 
-	if (bullet_) {
-		bullet_->Update();
+	for (PlayerBullet* bullet : bullets_) {
+		bullet->Update();
 	}
 
 	// デバッグテキストの表示
@@ -67,8 +73,8 @@ void Player::Update() {
 
 void Player::Draw(ViewProjection viewProjection) {
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
-	if (bullet_) {
-		bullet_->Draw(viewProjection);
+	for (PlayerBullet* bullet : bullets_) {
+		bullet->Draw(viewProjection);
 	}
 }
 
@@ -81,12 +87,12 @@ void Player::Rotate() {
 	}
 }
 
-void Player::Attack() { 
+void Player::Attack() {
 	if (input_->TriggerKey(DIK_SPACE)) {
 		PlayerBullet* newBullet = new PlayerBullet();
 		newBullet->Initialize(model_, worldTransform_.translation_);
 
-		bullet_ = newBullet;
+		bullets_.push_back(newBullet);
 	}
 
 }
