@@ -2,7 +2,7 @@
 #include "Calculation.h"
 #include "ImGuiManager.h"
 
-Player::~Player() { 
+Player::~Player() {
 	for (PlayerBullet* bullet : bullets_) {
 		delete bullet;
 	}
@@ -19,6 +19,14 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 void Player::Update() {
 	worldTransform_.TransferMatrix();
 
+	// デスフラグの立った弾を削除
+	bullets_.remove_if([](PlayerBullet* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
 	Rotate();
 
 	//  移動ベクトル
@@ -67,8 +75,6 @@ void Player::Update() {
 
 	worldTransform_.translation_.y = max(worldTransform_.translation_.y, -kMoveLimitY);
 	worldTransform_.translation_.y = min(worldTransform_.translation_.y, +kMoveLimitY);
-
-	
 }
 
 void Player::Draw(ViewProjection viewProjection) {
@@ -89,10 +95,14 @@ void Player::Rotate() {
 
 void Player::Attack() {
 	if (input_->TriggerKey(DIK_SPACE)) {
+		// 弾の速度
+		const float kBulletSpeed = 1.0f;
+		Vector3 velocity(0, 0, kBulletSpeed);
+		velocity = Calculation::TransformNormal(velocity, worldTransform_.matWorld_);
+		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();
-		newBullet->Initialize(model_, worldTransform_.translation_);
+		newBullet->Initialize(model_, worldTransform_.translation_, velocity);
 
 		bullets_.push_back(newBullet);
 	}
-
 }

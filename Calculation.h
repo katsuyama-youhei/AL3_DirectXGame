@@ -41,6 +41,8 @@ public:
 	// アフィン変換行列
 	static Matrix4x4
 	    MakeAfineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
+	// ベクトル変換
+	static Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
 };
 
-//Vector3 operator+(const Vector3& v1, const Vector3& v2);
+// Vector3 operator+(const Vector3& v1, const Vector3& v2);
