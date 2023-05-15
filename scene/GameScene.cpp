@@ -36,11 +36,15 @@ void GameScene::Initialize() {
 
 void GameScene::Update() { 
 	player_->Update();
-	enemy_->Update();
+	if (enemy_) {
+		enemy_->Update();
+	}
+	
 	debugCamera_->Update();
 	#ifdef _DEBUG
 	if (input_->TriggerKey(DIK_Q)) {
 		isDebygCameraActive_ = true;
+		enemy_ = nullptr;
 	}
 	#endif
 	if (isDebygCameraActive_) {
@@ -82,7 +86,9 @@ void GameScene::Draw() {
 	/// </summary>
 
 	player_->Draw(viewProjection_);
-	enemy_->Draw(viewProjection_);
+	if (enemy_) {
+		enemy_->Draw(viewProjection_);
+	}
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
