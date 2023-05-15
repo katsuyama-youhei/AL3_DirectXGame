@@ -1,13 +1,14 @@
 #pragma once
 #include "Model.h"
-#include"WorldTransform.h"
+#include "WorldTransform.h"
 #include <assert.h>
 
 class EnemyBullet {
 public:
-	void Initialize(Model* model,const Vector3& position);
+	void Initialize(Model* model, const Vector3& position);
 	void Update();
 	void Draw(const ViewProjection& viewProjection);
+	bool isDead() const { return isDead_; }
 
 private:
 	WorldTransform worldTransform_;

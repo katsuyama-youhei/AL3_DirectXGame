@@ -18,6 +18,7 @@ public:
 	static const int kFireInterval = 60;
 	void ApproachInitialize();
 
+
 private:
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;

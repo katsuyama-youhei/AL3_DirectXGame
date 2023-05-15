@@ -18,6 +18,13 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle){
 };
 
 void Enemy::Update(){ 
+	bullets_.remove_if([](EnemyBullet* bullet) {
+		if (bullet->isDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
 	switch (phase_) {
 	case Phase::Approach:
 	default:
@@ -60,11 +67,9 @@ void Enemy::Leave() {
 }
 
 void Enemy::Fire() {
-	EnemyBullet* newBullet = new EnemyBullet(); 
+	EnemyBullet* newBullet = new EnemyBullet();
 	newBullet->Initialize(model_, worldTransform_.translation_);
 	bullets_.push_back(newBullet);
 };
 
-void Enemy::ApproachInitialize() { 
-	fireTimer = 0;
-}
+void Enemy::ApproachInitialize() { fireTimer = 0; }
