@@ -7,7 +7,9 @@ GameScene::GameScene() {}
 
 GameScene::~GameScene() {
 	delete model_;
+	delete enemyModel_;
 	delete player_;
+	delete enemy_;
 	delete debugCamera_;
 }
 
@@ -18,10 +20,14 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 	textureHandle_ = TextureManager::Load("mario.jpg");
 	model_ = Model::Create();
+	enemyTextureHandle_ = TextureManager::Load("sentouki.png");
+	enemyModel_ = Model::Create();
 	viewProjection_.Initialize();
 	player_ = new Player();
 	player_->Initialize(model_,textureHandle_);
 	debugCamera_ = new DebugCamera(1280.0f,720.0f );
+	enemy_ = new Enemy;
+	enemy_->Initialize(enemyModel_, enemyTextureHandle_);
 	// 軸方向の表示を有効にする
 	AxisIndicator::GetInstance()->SetVisible(true);
 	// 軸方向表示が参照するビュープロジェクションを指定する（アドレス渡し）
@@ -30,6 +36,7 @@ void GameScene::Initialize() {
 
 void GameScene::Update() { 
 	player_->Update();
+	enemy_->Update();
 	debugCamera_->Update();
 	#ifdef _DEBUG
 	if (input_->TriggerKey(DIK_Q)) {
@@ -75,6 +82,7 @@ void GameScene::Draw() {
 	/// </summary>
 
 	player_->Draw(viewProjection_);
+	enemy_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
