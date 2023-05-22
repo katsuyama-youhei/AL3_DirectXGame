@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include"Calculation.h"
+#include"Player.h"
 
 Enemy::~Enemy() {
 	for (EnemyBullet* bullet : bullets_) {
@@ -67,9 +68,33 @@ void Enemy::Leave() {
 }
 
 void Enemy::Fire() {
+	assert(player_);
+	const float kBulletSpeed = 1.0f;
+
+	Vector3 playerWorldPos = player_->GetWorldPosition();
+	Vector3 enemyWorldPos = GetWorldPosition();
+	Vector3 differenceVector = Calculation::Subtract(playerWorldPos, enemyWorldPos);
+	
+	differenceVector = Calculation::Normlize(differenceVector);
+	
+	Vector3 velocity(
+	    differenceVector.x * kBulletSpeed, 
+		differenceVector.y * kBulletSpeed,
+	    differenceVector.z * kBulletSpeed
+	);
+
 	EnemyBullet* newBullet = new EnemyBullet();
-	newBullet->Initialize(model_, worldTransform_.translation_);
+	newBullet->Initialize(model_, worldTransform_.translation_, velocity);
 	bullets_.push_back(newBullet);
 };
 
 void Enemy::ApproachInitialize() { fireTimer = 0; }
+
+Vector3 Enemy::GetWorldPosition(){
+
+	Vector3 worldPos;
+	worldPos.x = worldTransform_.translation_.x;
+	worldPos.y = worldTransform_.translation_.y;
+	worldPos.z = worldTransform_.translation_.z;
+	return worldPos;
+	};

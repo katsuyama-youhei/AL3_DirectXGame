@@ -28,6 +28,7 @@ void GameScene::Initialize() {
 	debugCamera_ = new DebugCamera(1280.0f,720.0f );
 	enemy_ = new Enemy;
 	enemy_->Initialize(enemyModel_, enemyTextureHandle_);
+	enemy_->SetPlayer(player_);
 	// 軸方向の表示を有効にする
 	AxisIndicator::GetInstance()->SetVisible(true);
 	// 軸方向表示が参照するビュープロジェクションを指定する（アドレス渡し）

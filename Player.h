@@ -14,6 +14,7 @@ public:
 	void Rotate();
 	void Attack();
 	~Player();
+	Vector3 GetWorldPosition();
 
 private:
 	WorldTransform worldTransform_;
@@ -22,4 +23,5 @@ private:
 	Input* input_ = nullptr;
 	float inputFloat3[3] = {0, 0, 0};
 	std::list<PlayerBullet*> bullets_;
+
 };

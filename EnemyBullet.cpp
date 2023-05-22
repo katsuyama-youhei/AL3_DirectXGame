@@ -1,13 +1,13 @@
 #include "EnemyBullet.h"
 #include "Calculation.h"
 
-void EnemyBullet::Initialize(Model* model, const Vector3& position) {
+void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity) {
 	assert(model);
 	textureHandle_ = TextureManager::Load("Jade.png");
 	model_ = model;
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
-	velocity_ = {0.0f, 0.0f, -1.0f};
+	velocity_ = velocity;
 };
 
 void EnemyBullet::Update() {
