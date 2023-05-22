@@ -1,7 +1,7 @@
 #include "GameScene.h"
+#include "AxisIndicator.h"
 #include "TextureManager.h"
 #include <cassert>
-#include"AxisIndicator.h"
 
 GameScene::GameScene() {}
 
@@ -24,8 +24,8 @@ void GameScene::Initialize() {
 	enemyModel_ = Model::Create();
 	viewProjection_.Initialize();
 	player_ = new Player();
-	player_->Initialize(model_,textureHandle_);
-	debugCamera_ = new DebugCamera(1280.0f,720.0f );
+	player_->Initialize(model_, textureHandle_);
+	debugCamera_ = new DebugCamera(1280.0f, 720.0f);
 	enemy_ = new Enemy;
 	enemy_->Initialize(enemyModel_, enemyTextureHandle_);
 	enemy_->SetPlayer(player_);
@@ -35,23 +35,23 @@ void GameScene::Initialize() {
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
 }
 
-void GameScene::Update() { 
+void GameScene::Update() {
 	player_->Update();
 	if (enemy_) {
 		enemy_->Update();
 	}
-	
+	CheckAllCollisions();
 	debugCamera_->Update();
-	#ifdef _DEBUG
+#ifdef _DEBUG
 	if (input_->TriggerKey(DIK_Q)) {
 		isDebygCameraActive_ = true;
 		enemy_ = nullptr;
 	}
-	#endif
+#endif
 	if (isDebygCameraActive_) {
 		debugCamera_->Update();
-		viewProjection_.matView=debugCamera_->GetViewProjection().matView;
-		viewProjection_.matProjection=debugCamera_->GetViewProjection().matProjection;
+		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
 		viewProjection_.TransferMatrix();
 	} else {
 		viewProjection_.UpdateMatrix();
@@ -108,3 +108,78 @@ void GameScene::Draw() {
 
 #pragma endregion
 }
+
+void GameScene::CheckAllCollisions() {
+	Vector3 posA, posB, radiusA, radiusB;
+
+	const std::list<PlayerBullet*>& playerBullets = player_->GetBullets();
+	const std::list<EnemyBullet*>& enemyBullets = enemy_->GetBullets();
+
+#pragma region
+	posA = player_->GetWorldPosition();
+	radiusA = {3.0f, 3.0f, 3.0f};
+	for (EnemyBullet* bullet : enemyBullets) {
+		posB = bullet->GetWorldPosition();
+		radiusB = {3.0f, 3.0f, 3.0f};
+		Vector3 a2b = {
+		    (posA.x - posB.x) * (posA.x - posB.x), (posA.y - posB.y) * (posA.y - posB.y),
+		    (posA.z - posB.z) * (posA.z - posB.z)};
+		Vector3 a2br = {
+		    (radiusA.x + radiusB.x) * (radiusA.x + radiusB.x),
+		    (radiusA.y + radiusB.y) * (radiusA.y + radiusB.y),
+		    (radiusA.z + radiusB.z) * (radiusA.z + radiusB.z)};
+		if (a2b.x + a2b.y + a2b.z <= a2br.x || a2b.x + a2b.y + a2b.z <= a2br.y ||
+		    a2b.x + a2b.y + a2b.z <= a2br.z) {
+			bullet->OnCollision();
+			player_->OnCollision();
+		}
+	}
+
+#pragma endregion
+
+#pragma region
+	posA = enemy_->GetWorldPosition();
+	radiusA = {3.0f, 3.0f, 3.0f};
+	for (PlayerBullet* bullet : playerBullets) {
+		posB = bullet->GetWorldPosition();
+		radiusB = {3.0f, 3.0f, 3.0f};
+		Vector3 a2b = {
+		    (posA.x - posB.x) * (posA.x - posB.x), (posA.y - posB.y) * (posA.y - posB.y),
+		    (posA.z - posB.z) * (posA.z - posB.z)};
+		Vector3 a2br = {
+		    (radiusA.x + radiusB.x) * (radiusA.x + radiusB.x),
+		    (radiusA.y + radiusB.y) * (radiusA.y + radiusB.y),
+		    (radiusA.z + radiusB.z) * (radiusA.z + radiusB.z)};
+		if (a2b.x + a2b.y + a2b.z <= a2br.x || a2b.x + a2b.y + a2b.z <= a2br.y ||
+		    a2b.x + a2b.y + a2b.z <= a2br.z) {
+			enemy_->OnCollision();
+			bullet->OnCollision();
+		}
+	}
+#pragma endregion
+
+#pragma region
+	
+	for (PlayerBullet* bullet_ : playerBullets) {
+		posA=bullet_->GetWorldPosition();
+		radiusA = {3.0f, 3.0f, 3.0f};
+		for (EnemyBullet* bullet : enemyBullets) {
+			posB=bullet->GetWorldPosition();
+			radiusB = {3.0f, 3.0f, 3.0f};
+			Vector3 a2b = {
+			    (posA.x - posB.x) * (posA.x - posB.x), (posA.y - posB.y) * (posA.y - posB.y),
+			    (posA.z - posB.z) * (posA.z - posB.z)};
+			Vector3 a2br = {
+			    (radiusA.x + radiusB.x) * (radiusA.x + radiusB.x),
+			    (radiusA.y + radiusB.y) * (radiusA.y + radiusB.y),
+			    (radiusA.z + radiusB.z) * (radiusA.z + radiusB.z)};
+			if (a2b.x + a2b.y + a2b.z <= a2br.x || a2b.x + a2b.y + a2b.z <= a2br.y ||
+			    a2b.x + a2b.y + a2b.z <= a2br.z) {
+				bullet->OnCollision();
+				bullet_->OnCollision();
+			}
+		}
+	}
+
+#pragma endregion
+};

@@ -57,9 +57,9 @@ void Enemy::Approach() {
 		Fire();
 		fireTimer = kFireInterval;
 	}
-	if (worldTransform_.translation_.z < 0.0f) {
+	/*if (worldTransform_.translation_.z < 0.0f) {
 		phase_ = Phase::Leave;
-	}
+	}*/
 }
 
 void Enemy::Leave() {
@@ -98,3 +98,7 @@ Vector3 Enemy::GetWorldPosition(){
 	worldPos.z = worldTransform_.translation_.z;
 	return worldPos;
 	};
+
+void Enemy::OnCollision() {
+
+}

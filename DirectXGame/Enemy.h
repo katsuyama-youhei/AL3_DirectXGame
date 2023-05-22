@@ -21,6 +21,8 @@ public:
 	void ApproachInitialize();
 	void SetPlayer(Player* player) { player_ = player; }
 	Vector3 GetWorldPosition();
+	void OnCollision();
+	const std::list<EnemyBullet*>& GetBullets() { return bullets_; }
 
 private:
 	WorldTransform worldTransform_;
