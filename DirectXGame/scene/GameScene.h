@@ -11,6 +11,7 @@
 #include"Player.h"
 #include"Enemy.h"
 #include"DebugCamera.h"
+#include"Skydome.h"
 
 /// <summary>
 /// ゲームシーン
@@ -57,11 +58,13 @@ private: // メンバ変数
 	Model* model_ = nullptr;
 	uint32_t enemyTextureHandle_ = 0;
 	Model* enemyModel_ = nullptr;
+	Model* modelSkydome_ = nullptr;
 
 	//WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
 	Player* player_ = nullptr;
 	Enemy* enemy_ = nullptr;
+	Skydome* skydome_ = nullptr;
 
 	// デバッグカメラ
 	bool isDebygCameraActive_ = false;

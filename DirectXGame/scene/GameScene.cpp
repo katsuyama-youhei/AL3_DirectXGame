@@ -11,6 +11,8 @@ GameScene::~GameScene() {
 	delete player_;
 	delete enemy_;
 	delete debugCamera_;
+	delete modelSkydome_;
+	delete skydome_;
 }
 
 void GameScene::Initialize() {
@@ -26,9 +28,13 @@ void GameScene::Initialize() {
 	player_ = new Player();
 	player_->Initialize(model_, textureHandle_);
 	debugCamera_ = new DebugCamera(1280.0f, 720.0f);
-	enemy_ = new Enemy;
+	enemy_ = new Enemy();
 	enemy_->Initialize(enemyModel_, enemyTextureHandle_);
 	enemy_->SetPlayer(player_);
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
+	skydome_ = new Skydome();
+	skydome_->Initialize(modelSkydome_);
+
 	// 軸方向の表示を有効にする
 	AxisIndicator::GetInstance()->SetVisible(true);
 	// 軸方向表示が参照するビュープロジェクションを指定する（アドレス渡し）
@@ -41,11 +47,12 @@ void GameScene::Update() {
 		enemy_->Update();
 	}
 	CheckAllCollisions();
+//	skydome_->Update();
 	debugCamera_->Update();
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_Q)) {
 		isDebygCameraActive_ = true;
-		enemy_ = nullptr;
+		//enemy_ = nullptr;
 	}
 #endif
 	if (isDebygCameraActive_) {
@@ -90,7 +97,7 @@ void GameScene::Draw() {
 	if (enemy_) {
 		enemy_->Draw(viewProjection_);
 	}
-
+	skydome_->Draw(viewProjection_);
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion
