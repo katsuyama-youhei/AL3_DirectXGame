@@ -17,10 +17,10 @@ private:
 	Model* model_ = nullptr;
 	uint32_t textureHandle_ = 0u;
 	Vector3 velocity_;
-	// Žõ–½
+	// å¯¿å‘½
 	static const int32_t kLifeTime = 60 * 5;
-	// ƒfƒXƒ^ƒCƒ}[
+	// ãƒ‡ã‚¹ã‚¿ã‚¤ãƒžãƒ¼
 	int32_t deathTimer_ = kLifeTime;
-	// ƒfƒXƒtƒ‰ƒO
+	// ãƒ‡ã‚¹ãƒ•ãƒ©ã‚°
 	bool isDead_ = false;
 };

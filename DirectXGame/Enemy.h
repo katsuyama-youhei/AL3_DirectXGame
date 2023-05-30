@@ -5,6 +5,7 @@
 #include"EnemyBullet.h"
 #include<list>
 
+// 前方宣言
 class Player;
 
 class Enemy {
@@ -19,6 +20,7 @@ public:
 
 	static const int kFireInterval = 60;
 	void ApproachInitialize();
+	// 別で宣言しているplayerをこのクラス内のplayerに代入
 	void SetPlayer(Player* player) { player_ = player; }
 	Vector3 GetWorldPosition();
 	void OnCollision();
@@ -34,8 +36,8 @@ private:
 	Player* player_ = nullptr;
 	
 	enum class Phase {
-		Approach, // �ڋ߂���
-		Leave,    // ���E����
+		Approach, // 接近する
+		Leave,    // 離脱する
 	
 	};
 	Phase phase_ = Phase::Approach;

@@ -90,6 +90,7 @@ void Enemy::Fire() {
 
 void Enemy::ApproachInitialize() { fireTimer = 60; }
 
+// ワールド座標を取得
 Vector3 Enemy::GetWorldPosition(){
 
 	Vector3 worldPos;
@@ -99,6 +100,7 @@ Vector3 Enemy::GetWorldPosition(){
 	return worldPos;
 	};
 
+// 当たっても何も起きない
 void Enemy::OnCollision() {
 
 }

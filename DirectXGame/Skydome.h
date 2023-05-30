@@ -10,6 +10,7 @@ public:
 	void Draw(const ViewProjection& viewProjection);
 
 private:
+	// モデルがでかいと楽
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;
 };

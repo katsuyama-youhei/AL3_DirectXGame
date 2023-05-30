@@ -1,6 +1,7 @@
 #include "Skydome.h"
 
 void Skydome::Initialize(Model* model){
+	// モデルがnullかのチェック
 	assert(model);
 	model_ = model;
 	worldTransform_.Initialize();

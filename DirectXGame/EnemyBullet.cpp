@@ -22,6 +22,7 @@ void EnemyBullet::Draw(const ViewProjection& viewProjection) {
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
 };
 
+// 当たったらisDead_をtrueにする
 void EnemyBullet::OnCollision() { isDead_ = true; }
 
 Vector3 EnemyBullet::GetWorldPosition() {

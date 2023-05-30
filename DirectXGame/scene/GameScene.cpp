@@ -27,7 +27,7 @@ void GameScene::Initialize() {
 	viewProjection_.Initialize();
 	player_ = new Player();
 	player_->Initialize(model_, textureHandle_);
-	debugCamera_ = new DebugCamera(1280.0f, 720.0f);
+	debugCamera_ = new DebugCamera(int(1280.0f), int(720.0f));
 	enemy_ = new Enemy();
 	enemy_->Initialize(enemyModel_, enemyTextureHandle_);
 	enemy_->SetPlayer(player_);

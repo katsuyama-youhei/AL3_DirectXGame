@@ -14,6 +14,7 @@ public:
 	void Rotate();
 	void Attack();
 	~Player();
+	// ワールド座礁を取得
 	Vector3 GetWorldPosition();
 	void OnCollision();
 	const std::list<PlayerBullet*>& GetBullets() { return bullets_; }
