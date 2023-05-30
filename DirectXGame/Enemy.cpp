@@ -51,7 +51,7 @@ void Enemy::Draw(ViewProjection viewProjection){
 
 void Enemy::Approach() {
 	velocity_ = {0.0f, 0.0f, -0.2f};
-	worldTransform_.translation_ = Calculation::Add(worldTransform_.translation_, velocity_);
+	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
 	fireTimer--;
 	if (fireTimer <= 0) {
 		Fire();
@@ -64,7 +64,7 @@ void Enemy::Approach() {
 
 void Enemy::Leave() {
 	velocity_ = {-0.2f, 0.1f, -0.2f};
-	worldTransform_.translation_ = Calculation::Add(worldTransform_.translation_, velocity_);
+	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
 }
 
 void Enemy::Fire() {
@@ -73,9 +73,9 @@ void Enemy::Fire() {
 
 	Vector3 playerWorldPos = player_->GetWorldPosition();
 	Vector3 enemyWorldPos = GetWorldPosition();
-	Vector3 differenceVector = Calculation::Subtract(playerWorldPos, enemyWorldPos);
+	Vector3 differenceVector = Subtract(playerWorldPos, enemyWorldPos);
 	
-	differenceVector = Calculation::Normlize(differenceVector);
+	differenceVector = Normlize(differenceVector);
 	
 	Vector3 velocity(
 	    differenceVector.x * kBulletSpeed, 

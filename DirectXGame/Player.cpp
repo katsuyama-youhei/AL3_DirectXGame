@@ -46,7 +46,7 @@ void Player::Update() {
 		move.y -= kCharacterSpeed;
 	}
 
-	worldTransform_.translation_ = Calculation::Add(worldTransform_.translation_, move);
+	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
 
 	worldTransform_.UpdateMatrix();
 
@@ -98,7 +98,7 @@ void Player::Attack() {
 		// 弾の速度
 		const float kBulletSpeed = 1.0f;
 		Vector3 velocity(0, 0, kBulletSpeed);
-		velocity = Calculation::TransformNormal(velocity, worldTransform_.matWorld_);
+		velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();
 		newBullet->Initialize(model_, worldTransform_.translation_, velocity);
