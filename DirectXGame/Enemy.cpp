@@ -1,6 +1,15 @@
 #include "Enemy.h"
 #include"Calculation.h"
 #include"Player.h"
+#include "ImGuiManager.h"
+
+// staticで宣言したメンバ関数ポインタテーブルの実体
+void (Enemy::*Enemy::pFunc[static_cast<size_t>(Phase::Leave) + 1])() = {
+
+    &Enemy::Approach, // 接近
+    &Enemy::Leave     // 離脱
+
+};
 
 Enemy::~Enemy() {
 	for (EnemyBullet* bullet : bullets_) {
@@ -26,17 +35,18 @@ void Enemy::Update(){
 		}
 		return false;
 	});
-	switch (phase_) {
-	case Phase::Approach:
-	default:
-		Approach();
-		break;
-	case Phase::Leave:
-		Leave();
-		break;
-	}
-	//worldTransform_.translation_ = Calculation::Subtract(worldTransform_.translation_, velocity_);
+
+	// 現在のフェーズの関数を実行
+	(this->*pFunc[static_cast<size_t>(phase_)])();
+	// 行列を更新	
 	worldTransform_.UpdateMatrix();
+	// デバッグ用表示
+	ImGui::Begin("EnemyDebug");
+	ImGui::Text(
+	    "Enemy Pos:%f,%f,%f", worldTransform_.translation_.x, worldTransform_.translation_.y,
+	    worldTransform_.translation_.z);
+	ImGui::Text("Enemy Phase: %s", PhaseName[static_cast<size_t>(phase_)]);
+	ImGui::End();
 	for (EnemyBullet* bullet : bullets_) {
 		bullet->Update();
 	}
@@ -51,7 +61,7 @@ void Enemy::Draw(ViewProjection viewProjection){
 
 void Enemy::Approach() {
 	velocity_ = {0.0f, 0.0f, -0.2f};
-	//worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
+	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
 	fireTimer--;
 	if (fireTimer <= 0) {
 		Fire();
@@ -63,7 +73,7 @@ void Enemy::Approach() {
 }
 
 void Enemy::Leave() {
-	velocity_ = {-0.2f, 0.1f, -0.2f};
+	velocity_ = {-0.2f, 0.1f, 0.0f};
 	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
 }
 
