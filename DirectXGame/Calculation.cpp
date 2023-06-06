@@ -410,7 +410,7 @@ Matrix4x4 MakeScaleMatrix(const Vector3& scale) {
 };
 
 // アフィン変換行列
-Matrix4x4 MakeAfineMatrix(
+Matrix4x4 MakeAffineMatrix(
     const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
 	Matrix4x4 s = MakeScaleMatrix(scale);
 	Matrix4x4 t = MakeTranslateMatrix(translate);

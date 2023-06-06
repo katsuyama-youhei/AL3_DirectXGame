@@ -8,7 +8,7 @@
 
 class Player {
 public:
-	void Initialize(Model* model,uint32_t textureHandle);
+	void Initialize(Model* model,uint32_t textureHandle,const Vector3& position);
 	void Update();
 	void Draw(ViewProjection viewProjection);
 	void Rotate();
@@ -16,8 +16,15 @@ public:
 	~Player();
 	// ワールド座礁を取得
 	Vector3 GetWorldPosition();
+	// 衝突時にする行動
 	void OnCollision();
 	const std::list<PlayerBullet*>& GetBullets() { return bullets_; }
+	Vector3 GetRotate() { return worldTransform_.rotation_; }
+/// <summary>
+/// 親となるワールドトランスフォームをセット
+/// </summary>
+/// <param name="parent">親となるワールドトランスフォーム</param>
+	void SetParent(const WorldTransform* parent);
 
 private:
 	WorldTransform worldTransform_;

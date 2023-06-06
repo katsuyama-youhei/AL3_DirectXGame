@@ -51,7 +51,7 @@ void Enemy::Draw(ViewProjection viewProjection){
 
 void Enemy::Approach() {
 	velocity_ = {0.0f, 0.0f, -0.2f};
-	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
+	//worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
 	fireTimer--;
 	if (fireTimer <= 0) {
 		Fire();

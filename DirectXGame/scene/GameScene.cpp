@@ -13,6 +13,7 @@ GameScene::~GameScene() {
 	delete debugCamera_;
 	delete modelSkydome_;
 	delete skydome_;
+	delete railCamera_;
 }
 
 void GameScene::Initialize() {
@@ -26,7 +27,8 @@ void GameScene::Initialize() {
 	enemyModel_ = Model::Create();
 	viewProjection_.Initialize();
 	player_ = new Player();
-	player_->Initialize(model_, textureHandle_);
+	Vector3 playerPosition(0, 0, 25);
+	player_->Initialize(model_, textureHandle_,playerPosition);
 	debugCamera_ = new DebugCamera(int(1280.0f), int(720.0f));
 	enemy_ = new Enemy();
 	enemy_->Initialize(enemyModel_, enemyTextureHandle_);
@@ -34,6 +36,9 @@ void GameScene::Initialize() {
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	skydome_ = new Skydome();
 	skydome_->Initialize(modelSkydome_);
+	railCamera_ = new RailCamera();
+	railCamera_->Initialize({0.0f, 0.0f, -50.0f}, player_->GetRotate());
+	player_->SetParent(&railCamera_->GetWorldTransform());
 
 	// 軸方向の表示を有効にする
 	AxisIndicator::GetInstance()->SetVisible(true);
@@ -61,7 +66,11 @@ void GameScene::Update() {
 		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
 		viewProjection_.TransferMatrix();
 	} else {
-		viewProjection_.UpdateMatrix();
+		//viewProjection_.UpdateMatrix();
+		railCamera_->Update();
+		viewProjection_.matView = railCamera_->GetViewProjection().matView;
+		viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
+		viewProjection_.TransferMatrix();
 	}
 	debugCamera_->Update();
 }

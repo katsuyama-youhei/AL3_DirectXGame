@@ -38,7 +38,7 @@
 
 // アフィン変換行列
  Matrix4x4
-    MakeAfineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
+    MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
 // ベクトル変換
  Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
 
