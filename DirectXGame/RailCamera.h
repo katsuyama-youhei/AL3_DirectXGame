@@ -3,7 +3,7 @@
 #include "WorldTransform.h"
 
 /// <summary>
-/// 
+/// レールカメラ
 /// </summary>
 class RailCamera {
 public:
