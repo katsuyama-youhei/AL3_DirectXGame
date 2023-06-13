@@ -7,9 +7,13 @@
 /// </summary>
 class RailCamera {
 public:
+	// 初期化
 	void Initialize(const Vector3& position,const Vector3& radian);
+	// 更新
 	void Update();
+	// ビュープロジェクトの取得
 	const ViewProjection& GetViewProjection() { return viewProjection_; }
+	// ワールドトランスフォームの取得
 	const WorldTransform& GetWorldTransform() { return worldTransform_; }
 
 private:

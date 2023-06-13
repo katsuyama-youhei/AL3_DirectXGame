@@ -10,12 +10,19 @@ class Player;
 
 class Enemy {
 public:
+	// デストラクト
 	~Enemy();
+	// 初期化
 	void Initialize(Model* model, uint32_t textureHandle);
+	// 更新
 	void Update();
+	// 描画
 	void Draw(ViewProjection viewProjection);
+	// 接近フェーズの処理
 	void Approach();
+	// 離脱フェーズの処理
 	void Leave();
+	// 弾の発射
 	void Fire();
 
 	static const int kFireInterval = 60;
@@ -27,8 +34,11 @@ public:
 	const std::list<EnemyBullet*>& GetBullets() { return bullets_; }
 
 private:
+	// ワールド変換データ
 	WorldTransform worldTransform_;
+	//　モデル
 	Model* model_ = nullptr;
+	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 	Vector3 velocity_;
 	std::list<EnemyBullet*> bullets_;

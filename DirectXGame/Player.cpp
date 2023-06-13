@@ -9,6 +9,7 @@ Player::~Player() {
 }
 
 void Player::Initialize(Model* model, uint32_t textureHandle,const Vector3& position) {
+	// モデルのnullチェック
 	assert(model);
 	model_ = model;
 	textureHandle_ = textureHandle;
@@ -104,18 +105,19 @@ void Player::Attack() {
 		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();
 		newBullet->Initialize(model_, GetWorldPosition(), velocity);
-
+		// リストに登録
 		bullets_.push_back(newBullet);
 	}
 }
 
-Vector3 Player::GetWorldPosition(){
+Vector3 Player::GetWorldPosition() {
 	Vector3 worldPos;
 	worldPos.x = worldTransform_.matWorld_.m[3][0];
 	worldPos.y = worldTransform_.matWorld_.m[3][1];
 	worldPos.z = worldTransform_.matWorld_.m[3][2];
 	return worldPos;
-};
+	
+}
 
 void Player::OnCollision() {
 	// 何もしない

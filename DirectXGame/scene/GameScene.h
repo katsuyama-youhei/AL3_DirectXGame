@@ -55,17 +55,26 @@ private: // メンバ変数
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 
+	// 自機のテクスチャハンドル
 	uint32_t textureHandle_ = 0;
+	// 自機のモデル
 	Model* model_ = nullptr;
+	//　敵のテクスチャハンドル
 	uint32_t enemyTextureHandle_ = 0;
+	//　敵のモデル
 	Model* enemyModel_ = nullptr;
+	// 天球のモデル
 	Model* modelSkydome_ = nullptr;
 
 	//WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
+	// 自機
 	Player* player_ = nullptr;
+	// 敵
 	Enemy* enemy_ = nullptr;
+	// 天球
 	Skydome* skydome_ = nullptr;
+	// レールカメラ
 	RailCamera* railCamera_ = nullptr;
 
 	// デバッグカメラ

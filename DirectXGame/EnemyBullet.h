@@ -5,11 +5,17 @@
 
 class EnemyBullet {
 public:
-	void Initialize(Model* model, const Vector3& position,const Vector3& velocity);
+	// 初期化
+	void Initialize(Model* model, const Vector3& position, const Vector3& velocity);
+	// 更新
 	void Update();
+	// 描画
 	void Draw(const ViewProjection& viewProjection);
+	// デスフラグ
 	bool isDead() const { return isDead_; }
+	// 衝突時の反応
 	void OnCollision();
+	// ワールド座標の取得
 	Vector3 GetWorldPosition();
 
 private:

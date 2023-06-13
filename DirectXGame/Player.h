@@ -8,17 +8,24 @@
 
 class Player {
 public:
+	// 初期化
 	void Initialize(Model* model,uint32_t textureHandle,const Vector3& position);
+	// 更新
 	void Update();
+	// 描画
 	void Draw(ViewProjection viewProjection);
+	// 回転
 	void Rotate();
+	// 弾の発射
 	void Attack();
+	// デストラクト
 	~Player();
 	// ワールド座礁を取得
 	Vector3 GetWorldPosition();
 	// 衝突時にする行動
 	void OnCollision();
 	const std::list<PlayerBullet*>& GetBullets() { return bullets_; }
+	// 回転量の取得
 	Vector3 GetRotate() { return worldTransform_.rotation_; }
 /// <summary>
 /// 親となるワールドトランスフォームをセット
