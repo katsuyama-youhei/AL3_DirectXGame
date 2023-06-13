@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include"GameScene.h"
 #include"Calculation.h"
 #include"Player.h"
 
@@ -56,6 +57,7 @@ void Enemy::Approach() {
 		Fire();
 		fireTimer = kFireInterval;
 	}
+	// z座標が０よりも小さくなったら離脱フェーズに移行
 	/*if (worldTransform_.translation_.z < 0.0f) {
 		phase_ = Phase::Leave;
 	}*/
@@ -70,8 +72,11 @@ void Enemy::Fire() {
 	assert(player_);
 	const float kBulletSpeed = 1.0f;
 
+	// 自機のワールド座標
 	Vector3 playerWorldPos = player_->GetWorldPosition();
+	// 敵のワールド座標
 	Vector3 enemyWorldPos = GetWorldPosition();
+	// 自機から敵までの距離
 	Vector3 differenceVector = Subtract(playerWorldPos, enemyWorldPos);
 	
 	differenceVector = Normlize(differenceVector);
