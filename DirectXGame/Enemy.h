@@ -41,6 +41,9 @@ private:
 	
 	};
 	Phase phase_ = Phase::Approach;
+
+	// メンバ関数ポインタ
+	static void (Enemy::*pFunc[static_cast<size_t>(Phase::Leave) + 1])();
 };
 
 

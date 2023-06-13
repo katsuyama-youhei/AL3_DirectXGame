@@ -2,6 +2,12 @@
 #include"Calculation.h"
 #include"Player.h"
 
+// staticで宣言したメンバ関数ポインタテーブルの実体
+void (Enemy::*Enemy::pFunc[static_cast<size_t>(Phase::Leave) + 1])() = {
+	&Enemy::Approach,
+	&Enemy::Leave
+};
+
 Enemy::~Enemy() {
 	for (EnemyBullet* bullet : bullets_) {
 		delete bullet;
@@ -26,15 +32,8 @@ void Enemy::Update(){
 		}
 		return false;
 	});
-	switch (phase_) {
-	case Phase::Approach:
-	default:
-		Approach();
-		break;
-	case Phase::Leave:
-		Leave();
-		break;
-	}
+	// 現在のフェーズの関数を実行
+	(this->*pFunc[static_cast<size_t>(phase_)])();
 	//worldTransform_.translation_ = Calculation::Subtract(worldTransform_.translation_, velocity_);
 	worldTransform_.UpdateMatrix();
 	for (EnemyBullet* bullet : bullets_) {
@@ -51,19 +50,19 @@ void Enemy::Draw(ViewProjection viewProjection){
 
 void Enemy::Approach() {
 	velocity_ = {0.0f, 0.0f, -0.2f};
-	//worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
+	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
 	fireTimer--;
 	if (fireTimer <= 0) {
 		Fire();
 		fireTimer = kFireInterval;
 	}
-	if (worldTransform_.translation_.z < 0.0f) {
+	/*if (worldTransform_.translation_.z < 0.0f) {
 		phase_ = Phase::Leave;
-	}
+	}*/
 }
 
 void Enemy::Leave() {
-	velocity_ = {-0.2f, 0.1f, -0.2f};
+	velocity_ = {-0.2f, 0.1f, 0.0f};
 	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
 }
 
