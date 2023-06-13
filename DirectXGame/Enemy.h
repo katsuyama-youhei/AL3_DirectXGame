@@ -6,8 +6,6 @@
 #include<list>
 
 // 前方宣言
-
-
 class Player;
 
 class Enemy {
@@ -26,21 +24,16 @@ public:
 	void SetPlayer(Player* player) { player_ = player; }
 	Vector3 GetWorldPosition();
 	void OnCollision();
+	const std::list<EnemyBullet*>& GetBullets() { return bullets_; }
 
 private:
-	// ワールド変換データ
 	WorldTransform worldTransform_;
-	// モデル
 	Model* model_ = nullptr;
-	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 	Vector3 velocity_;
+	std::list<EnemyBullet*> bullets_;
 	int32_t fireTimer = 0;
-	
-	//	自キャラ
 	Player* player_ = nullptr;
-	// ゲームシーン
-	GameScene* gameScene_ = nullptr;
 	
 	enum class Phase {
 		Approach, // 接近する
