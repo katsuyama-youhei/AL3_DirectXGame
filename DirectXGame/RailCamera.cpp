@@ -21,7 +21,7 @@ void RailCamera::Update() {
 	inputFloat3[0] = worldTransform_.translation_.x;
 	inputFloat3[1] = worldTransform_.translation_.y;
 	inputFloat3[2] = worldTransform_.translation_.z;
-	ImGui::SliderFloat3("transform", inputFloat3, 0.0f, 1.0f);
+	ImGui::SliderFloat3("transform", inputFloat3, -5.0f, 5.0f);
 	worldTransform_.translation_.x = inputFloat3[0];
 	worldTransform_.translation_.y = inputFloat3[1];
 	worldTransform_.translation_.z = inputFloat3[2];
@@ -29,7 +29,7 @@ void RailCamera::Update() {
 	inputFloat3[0] = worldTransform_.rotation_.x;
 	inputFloat3[1] = worldTransform_.rotation_.y;
 	inputFloat3[2] = worldTransform_.rotation_.z;
-	ImGui::SliderFloat3("rotation", inputFloat3, 0.0f, 1.0f);
+	ImGui::SliderFloat3("rotation", inputFloat3, -5.0f, 5.0f);
 	worldTransform_.rotation_.x = inputFloat3[0];
 	worldTransform_.rotation_.y = inputFloat3[1];
 	worldTransform_.rotation_.z = inputFloat3[2];

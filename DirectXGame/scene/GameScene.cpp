@@ -21,23 +21,35 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
+	// 自機のテクスチャ
 	textureHandle_ = TextureManager::Load("mario.jpg");
+	// 自機のモデル
 	model_ = Model::Create();
+	
+	// 敵のテクスチャ
 	enemyTextureHandle_ = TextureManager::Load("sentouki.png");
+	// 敵のモデル
 	enemyModel_ = Model::Create();
+	
 	viewProjection_.Initialize();
+	
 	player_ = new Player();
 	Vector3 playerPosition(0, 0, 25);
 	player_->Initialize(model_, textureHandle_,playerPosition);
+	
 	debugCamera_ = new DebugCamera(int(1280.0f), int(720.0f));
+	
 	enemy_ = new Enemy();
 	enemy_->Initialize(enemyModel_, enemyTextureHandle_);
 	enemy_->SetPlayer(player_);
+	
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	skydome_ = new Skydome();
 	skydome_->Initialize(modelSkydome_);
+	
 	railCamera_ = new RailCamera();
 	railCamera_->Initialize({0.0f, 0.0f, -50.0f}, player_->GetRotate());
+	
 	player_->SetParent(&railCamera_->GetWorldTransform());
 
 	// 軸方向の表示を有効にする
