@@ -3,9 +3,7 @@
 #include"Player.h"
 
 Enemy::~Enemy() {
-	for (EnemyBullet* bullet : bullets_) {
-		delete bullet;
-	}
+	
 }
 
 void Enemy::Initialize(Model* model, uint32_t textureHandle){
@@ -19,34 +17,14 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle){
 };
 
 void Enemy::Update(){ 
-	bullets_.remove_if([](EnemyBullet* bullet) {
-		if (bullet->isDead()) {
-			delete bullet;
-			return true;
-		}
-		return false;
-	});
-	switch (phase_) {
-	case Phase::Approach:
-	default:
-		Approach();
-		break;
-	case Phase::Leave:
-		Leave();
-		break;
-	}
+	
 	//worldTransform_.translation_ = Calculation::Subtract(worldTransform_.translation_, velocity_);
 	worldTransform_.UpdateMatrix();
-	for (EnemyBullet* bullet : bullets_) {
-		bullet->Update();
-	}
+	
 };
 
 void Enemy::Draw(ViewProjection viewProjection){
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
-	for (EnemyBullet* bullet : bullets_) {
-		bullet->Draw(viewProjection);
-	}
 };
 
 void Enemy::Approach() {
