@@ -12,7 +12,7 @@ public:
 	// 描画
 	void Draw(const ViewProjection& viewProjection);
 	// デスフラグ
-	bool isDead() const { return isDead_; }
+	bool IsDead() const { return isDead_; }
 	// 衝突時の反応
 	void OnCollision();
 	// ワールド座標の取得

@@ -6,6 +6,8 @@
 #include<list>
 
 // 前方宣言
+class GameScene;
+
 class Player;
 
 class Enemy {
@@ -31,7 +33,12 @@ public:
 	void SetPlayer(Player* player) { player_ = player; }
 	Vector3 GetWorldPosition();
 	void OnCollision();
-	const std::list<EnemyBullet*>& GetBullets() { return bullets_; }
+	//const std::list<EnemyBullet*>& GetBullets() { return bullets_; }
+	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
+	bool IsDead() const { return isDead_; }
+	void SetWorldTransformTranslation(Vector3 worldTransformTranslation) {
+		worldTransform_.translation_ = worldTransformTranslation;
+	}
 
 private:
 	// ワールド変換データ
@@ -41,10 +48,13 @@ private:
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 	Vector3 velocity_;
-	std::list<EnemyBullet*> bullets_;
+	
 	int32_t fireTimer = 0;
 	Player* player_ = nullptr;
-	
+	GameScene* gameScene_ = nullptr;
+	// デスフラグ
+	bool isDead_ = false;
+
 	enum class Phase {
 		Approach, // 接近する
 		Leave,    // 離脱する

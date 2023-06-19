@@ -1,18 +1,19 @@
 #pragma once
 
 #include "Audio.h"
+#include "DebugCamera.h"
 #include "DirectXCommon.h"
+#include "Enemy.h"
 #include "Input.h"
 #include "Model.h"
+#include "Player.h"
+#include "RailCamera.h"
 #include "SafeDelete.h"
+#include "Skydome.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include"Player.h"
-#include"Enemy.h"
-#include"DebugCamera.h"
-#include"Skydome.h"
-#include"RailCamera.h"
+#include <sstream>
 
 /// <summary>
 /// ゲームシーン
@@ -50,6 +51,17 @@ public: // メンバ関数
 	/// </summary>
 	void CheckAllCollisions();
 
+	/// <summary>
+	/// 敵弾を追加する
+	/// </summary>
+	void AddEnemyBullet(EnemyBullet* enemyBullet);
+	// csvファイルのロード
+	void LoadEnemyPopData();
+	// 敵発生コマンドの更新
+	void UpdateEnemyPopCommands();
+	// 敵発生
+	void EnemyOccurrence(Model* model, uint32_t textureHandle,Vector3& vector);
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -59,19 +71,27 @@ private: // メンバ変数
 	uint32_t textureHandle_ = 0;
 	// 自機のモデル
 	Model* model_ = nullptr;
-	//　敵のテクスチャハンドル
+	// 　敵のテクスチャハンドル
 	uint32_t enemyTextureHandle_ = 0;
-	//　敵のモデル
+	// 　敵のモデル
 	Model* enemyModel_ = nullptr;
 	// 天球のモデル
 	Model* modelSkydome_ = nullptr;
 
-	//WorldTransform worldTransform_;
+	// WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
 	// 自機
 	Player* player_ = nullptr;
 	// 敵
-	Enemy* enemy_ = nullptr;
+	// Enemy* enemy_ = nullptr;
+	std::list<Enemy*> enemies_;
+	std::stringstream enemyPopCommands;
+	// 敵の発生コマンドの待機中フラグ
+	bool commandIsWait = false;
+	// 敵の発生コマンドの待機中タイマー(フレーム)
+	size_t commandWaitTimer = 0;
+	// 敵弾
+	std::list<EnemyBullet*> enemyBullets_;
 	// 天球
 	Skydome* skydome_ = nullptr;
 	// レールカメラ

@@ -10,9 +10,7 @@ void (Enemy::*Enemy::pFunc[static_cast<size_t>(Phase::Leave) + 1])() = {
 };
 
 Enemy::~Enemy() {
-	for (EnemyBullet* bullet : bullets_) {
-		delete bullet;
-	}
+	
 }
 
 void Enemy::Initialize(Model* model, uint32_t textureHandle){
@@ -26,31 +24,21 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle){
 };
 
 void Enemy::Update(){ 
-	bullets_.remove_if([](EnemyBullet* bullet) {
-		if (bullet->isDead()) {
-			delete bullet;
-			return true;
-		}
-		return false;
-	});
+
 	// 現在のフェーズの関数を実行
 	(this->*pFunc[static_cast<size_t>(phase_)])();
 	//worldTransform_.translation_ = Calculation::Subtract(worldTransform_.translation_, velocity_);
 	worldTransform_.UpdateMatrix();
-	for (EnemyBullet* bullet : bullets_) {
-		bullet->Update();
-	}
+	
 };
 
 void Enemy::Draw(ViewProjection viewProjection){
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
-	for (EnemyBullet* bullet : bullets_) {
-		bullet->Draw(viewProjection);
-	}
+	
 };
 
 void Enemy::Approach() {
-	velocity_ = {0.0f, 0.0f, -0.2f};
+	velocity_ = {0.0f, 0.0f, 0.0f};
 	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
 	fireTimer--;
 	if (fireTimer <= 0) {
@@ -81,15 +69,12 @@ void Enemy::Fire() {
 	
 	differenceVector = Normlize(differenceVector);
 	
-	Vector3 velocity(
-	    differenceVector.x * kBulletSpeed, 
-		differenceVector.y * kBulletSpeed,
-	    differenceVector.z * kBulletSpeed
-	);
+	Vector3 velocity = Multiply(kBulletSpeed, differenceVector);
 
 	EnemyBullet* newBullet = new EnemyBullet();
-	newBullet->Initialize(model_, worldTransform_.translation_, velocity);
-	bullets_.push_back(newBullet);
+	newBullet->Initialize(model_, enemyWorldPos, velocity);
+	//bullets_.push_back(newBullet);
+	gameScene_->AddEnemyBullet(newBullet);
 };
 
 void Enemy::ApproachInitialize() { fireTimer = 60; }
@@ -105,6 +90,4 @@ Vector3 Enemy::GetWorldPosition(){
 	};
 
 // 当たっても何も起きない
-void Enemy::OnCollision() {
-
-}
+void Enemy::OnCollision() { isDead_ = true; }
