@@ -40,5 +40,19 @@ Matrix4x4 MakeScaleMatrix(const Vector3& scale);
 
 // アフィン変換行列
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
-// ベクトル変換
+
+// 1. 透視投影行列
+Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRation, float nearClip, float farClip);
+// 2. 正射影行列
+Matrix4x4 MakeOrthographicMatrix(
+    float left, float top, float right, float bottom, float nearClip, float farClip);
+// 3. ビューポート変換行列
+Matrix4x4 MakeViewportMatrix(
+    float left, float top, float width, float height, float minDepth, float maxDepth);
+
+
+// ベクトル回転
 Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
+
+// ベクトル変換
+Vector3 Transform(const Vector3& v, const Matrix4x4& m);

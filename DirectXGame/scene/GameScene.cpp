@@ -40,12 +40,14 @@ void GameScene::Initialize() {
 
 	viewProjection_.Initialize();
 
+	// 自機の生成
 	player_ = new Player();
 	Vector3 playerPosition(0, 0, 25);
 	player_->Initialize(model_, textureHandle_, playerPosition);
 
 	debugCamera_ = new DebugCamera(int(1280.0f), int(720.0f));
 
+	// 敵の生成
 	Enemy* enemy = new Enemy();
 	enemy->Initialize(enemyModel_, enemyTextureHandle_);
 	enemy->SetPlayer(player_);
@@ -55,6 +57,7 @@ void GameScene::Initialize() {
 
 	LoadEnemyPopData();
 
+	// 天球の生成
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	skydome_ = new Skydome();
 	skydome_->Initialize(modelSkydome_);
@@ -68,6 +71,9 @@ void GameScene::Initialize() {
 	AxisIndicator::GetInstance()->SetVisible(true);
 	// 軸方向表示が参照するビュープロジェクションを指定する（アドレス渡し）
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
+
+		// レティクルのテクスチャ
+	TextureManager::Load("./Resources/point.png");
 }
 
 void GameScene::Update() {
@@ -91,7 +97,7 @@ void GameScene::Update() {
 		viewProjection_.TransferMatrix();
 	}
 
-	player_->Update();
+	player_->Update(viewProjection_);
 
 	UpdateEnemyPopCommands();
 	
@@ -174,6 +180,8 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
+
+	player_->DrawUI();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
