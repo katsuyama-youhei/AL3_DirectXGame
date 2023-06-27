@@ -261,7 +261,7 @@ void GameScene::CheckAllCollisions() {
 			if (a2b.x + a2b.y + a2b.z <= a2br.x || a2b.x + a2b.y + a2b.z <= a2br.y ||
 			    a2b.x + a2b.y + a2b.z <= a2br.z) {
 				bullet->OnCollision();
-				bullet_->OnCollision();
+				//bullet_->OnCollision();
 			}
 		}
 	}

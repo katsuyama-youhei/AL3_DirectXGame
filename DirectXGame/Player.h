@@ -12,7 +12,7 @@ public:
 	// 初期化
 	void Initialize(Model* model, uint32_t textureHandle, const Vector3& position);
 	// 更新
-	void Update(ViewProjection viewProjection);
+	void Update(const ViewProjection viewProjection);
 	// 描画
 	void Draw(ViewProjection viewProjection);
 	// 回転
@@ -41,6 +41,9 @@ public:
 	/// UI描画
 	/// </summary>
 	void DrawUI();
+
+	// マウスカーソルの位置にレティクルを表示
+	void Mouse2Reticle(ViewProjection viewProjection);
 
 private:
 	WorldTransform worldTransform_;
