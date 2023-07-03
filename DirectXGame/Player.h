@@ -45,6 +45,9 @@ public:
 	// マウスカーソルの位置にレティクルを表示
 	void Mouse2Reticle(ViewProjection viewProjection);
 
+	// ゲームパッドの右スティックでレティクルを操作し表示
+	void Gamepad2Reticle(ViewProjection viewProjection);
+
 private:
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;
