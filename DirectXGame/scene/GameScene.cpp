@@ -131,7 +131,6 @@ void GameScene::Update() {
 		return false;
 	});
 
-	debugCamera_->Update();
 }
 
 void GameScene::Draw() {
