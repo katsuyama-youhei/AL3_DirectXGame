@@ -94,10 +94,13 @@ void Player::Update(const ViewProjection viewProjection) {
 	const float kDistancePlayerTo3DReticle = 35.0f;
 	// 自機から3Dレティクルへのオフセット(Z+向き)
 	Vector3 offset = { 0,0,1.0f,};
+
 	// 自機のワールド行列の回転を反映
 	offset = TransformNormal(offset, worldTransform_.matWorld_);
-	// ベクトルの長さを整える　
+
+		// ベクトルの長さを整える　
 	offset = Multiply(kDistancePlayerTo3DReticle, Normlize(offset));
+
 	// 3Dレティクルの座標を設定
 	worldTransform3DReticle_.translation_ = Add(offset, worldTransform_.translation_);
 	worldTransform3DReticle_.UpdateMatrix();
@@ -112,7 +115,7 @@ void Player::Update(const ViewProjection viewProjection) {
 
 	// 3Dレティクルのワールド座標から2Dレティクルのスクリーン座標を計算
 	// 3Dレティクルのワールド座標を取得
-	Vector3 positionReticle = Get3DReticleWorldPosition();
+	//Vector3 positionReticle = Get3DReticleWorldPosition();
 
 	//Vector3 backPositionReticle = Get3DReticleFrontWorldPosition();
 
@@ -125,7 +128,7 @@ void Player::Update(const ViewProjection viewProjection) {
 	    Multiply(viewProjection.matView, Multiply(viewProjection.matProjection, matViewport));
 
 	// ワールドスクリーン座標変換(ここで3Dから2Dになる)
-	positionReticle = Transform(positionReticle, matViewProjectionViewport);
+	//positionReticle = Transform(positionReticle, matViewProjectionViewport);
 
 	//backPositionReticle = Transform(backPositionReticle, matViewProjectionViewport);
 
@@ -337,36 +340,36 @@ void Player::Gamepad2Reticle(ViewProjection viewProjection) {
 		// スプライトの座標変更を反映
 		sprite2DReticle_->SetPosition(spritePosition);
 
-		//// ビューポート行列
-		//Matrix4x4 matViewport =
-		//    MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
-		//// ビュープロジェクションビューポート合成行列
-		//Matrix4x4 matVPV =
-		//    Multiply(viewProjection.matView, Multiply(viewProjection.matProjection, matViewport));
+		// ビューポート行列
+		Matrix4x4 matViewport =
+		    MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
+		// ビュープロジェクションビューポート合成行列
+		Matrix4x4 matVPV =
+		    Multiply(viewProjection.matView, Multiply(viewProjection.matProjection, matViewport));
 
-		//// 合成乗列の逆上列を計算する
-		//Matrix4x4 matInverseVPN = Inverse(matVPV);
+		// 合成乗列の逆上列を計算する
+		Matrix4x4 matInverseVPN = Inverse(matVPV);
 
-		//// スクリーン座標(z=0ならニアクリップ面,z=1ならファークリップ面の座標)
-		//Vector3 posNear =
-		//    Vector3(sprite2DReticle_->GetPosition().x, sprite2DReticle_->GetPosition().y, 0);
-		//Vector3 posFar =
-		//    Vector3(sprite2DReticle_->GetPosition().x, sprite2DReticle_->GetPosition().y, 1);
+		// スクリーン座標(z=0ならニアクリップ面,z=1ならファークリップ面の座標)
+		Vector3 posNear =
+		    Vector3(sprite2DReticle_->GetPosition().x, sprite2DReticle_->GetPosition().y, 0);
+		Vector3 posFar =
+		    Vector3(sprite2DReticle_->GetPosition().x, sprite2DReticle_->GetPosition().y, 1);
 
-		//// スクリーン座標系からワールド座標系へ
-		//posNear = Transform(posNear, matInverseVPN);
-		//posFar = Transform(posFar, matInverseVPN);
+		// スクリーン座標系からワールド座標系へ
+		posNear = Transform(posNear, matInverseVPN);
+		posFar = Transform(posFar, matInverseVPN);
 
-		//// マウスレイの方向
-		//// posNearからposFarへのベクトルを計算
-		//Vector3 mouseDirection = Subtract(posFar, posNear);
-		//// ベクトルの正規化
-		//mouseDirection = Normlize(mouseDirection);
-		//// カメラから照準オブジェクトの距離
-		//const float kDistanceTestObject = 100.0f;
-		//worldTransform3DReticle_.translation_ =
-		//    Add(posNear, Multiply(kDistanceTestObject, mouseDirection));
-		//// 行列更新と転送
-		//worldTransform3DReticle_.UpdateMatrix();
+		// マウスレイの方向
+		// posNearからposFarへのベクトルを計算
+		Vector3 mouseDirection = Subtract(posFar, posNear);
+		// ベクトルの正規化
+		mouseDirection = Normlize(mouseDirection);
+		// カメラから照準オブジェクトの距離
+		const float kDistanceTestObject = 100.0f;
+		worldTransform3DReticle_.translation_ =
+		    Add(posNear, Multiply(kDistanceTestObject, mouseDirection));
+		// 行列更新と転送
+		worldTransform3DReticle_.UpdateMatrix();
 	}
 };
