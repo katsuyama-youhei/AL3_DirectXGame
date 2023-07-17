@@ -5,7 +5,7 @@
 
 class PlayerBullet {
 public:
-	void Initialize(Model* model, const Vector3& position,const Vector3& velocity);
+	void Initialize( const Vector3& position,const Vector3& velocity);
 	void Update();
 	void Draw(const ViewProjection& viewProjection);
 	bool IsDead() const { return isDead_; }

@@ -10,7 +10,7 @@
 class Player {
 public:
 	// 初期化
-	void Initialize(Model* model, uint32_t textureHandle, const Vector3& position);
+	void Initialize(Model* model,  const Vector3& position);
 	// 更新
 	void Update(const ViewProjection viewProjection);
 	// 描画
@@ -37,6 +37,8 @@ public:
 	// 3DReticleのワールド座標を取得
 	Vector3 Get3DReticleWorldPosition();
 
+	Vector3 Get3DReticleFrontWorldPosition();
+
 	/// <summary>
 	/// UI描画
 	/// </summary>
@@ -51,12 +53,20 @@ public:
 private:
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;
-	uint32_t textureHandle_ = 0u;
+	//uint32_t textureHandle_ = 0u;
 	Input* input_ = nullptr;
 	float inputFloat3[3] = {0, 0, 0};
 	std::list<PlayerBullet*> bullets_;
 	// 3Dレティクル用ワールドトランスフォーム
+	// 手前
 	WorldTransform worldTransform3DReticle_;
+	// 奥
+	WorldTransform worldTransform3DReticleFront_;
 	// 2Dレティクル用スプライト
 	Sprite* sprite2DReticle_ = nullptr;
+
+	// 2Dレティクルの奥
+	Sprite* sprite2DReticleFront_ = nullptr;
+	float attackTimer;
+	bool isAttack = false;
 };

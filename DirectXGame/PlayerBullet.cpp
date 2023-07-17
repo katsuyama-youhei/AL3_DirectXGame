@@ -1,9 +1,9 @@
 #include "PlayerBullet.h"
 #include"Calculation.h"
 
-void PlayerBullet::Initialize(Model* model, const Vector3& position,const Vector3& velocity){ 
-	assert(model);
-	model_ = model;
+void PlayerBullet::Initialize( const Vector3& position,const Vector3& velocity){ 
+	
+	model_ = Model::Create();
 	textureHandle_ = TextureManager::Load("black.png");
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;

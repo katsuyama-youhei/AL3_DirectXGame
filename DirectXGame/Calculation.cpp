@@ -279,12 +279,12 @@ Vector3 Normlize(const Vector3& v) {
 	} else {
 		resultNormlize.x = 0.0f;
 	}
-	if (v.x != 0.0f) {
+	if (v.y != 0.0f) {
 		resultNormlize.y = v.y / length;
 	} else {
 		resultNormlize.y = 0.0f;
 	}
-	if (v.x != 0.0f) {
+	if (v.z != 0.0f) {
 		resultNormlize.z = v.z / length;
 	} else {
 		resultNormlize.z = 0.0f;

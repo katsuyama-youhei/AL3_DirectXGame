@@ -21,7 +21,7 @@ private:
 	ViewProjection viewProjection_;
 
 	// 移動速度
-	Vector3 translationVelocity = {0.0f, 0.0f, 0.0f};
+	Vector3 translationVelocity = {0.0f, 0.0f, 0.2f};
 	// 回転速度
 	Vector3 rotationVelocity = {0.0f, 0.0f, 0.0f};
 };

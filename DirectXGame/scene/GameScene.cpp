@@ -31,7 +31,7 @@ void GameScene::Initialize() {
 	// 自機のテクスチャ
 	textureHandle_ = TextureManager::Load("mario.jpg");
 	// 自機のモデル
-	model_ = Model::Create();
+	model_ = Model::CreateFromOBJ("player", true);
 
 	// 敵のテクスチャ
 	enemyTextureHandle_ = TextureManager::Load("sentouki.png");
@@ -43,7 +43,7 @@ void GameScene::Initialize() {
 	// 自機の生成
 	player_ = new Player();
 	Vector3 playerPosition(0, 0, 25);
-	player_->Initialize(model_, textureHandle_, playerPosition);
+	player_->Initialize(model_,  playerPosition);
 
 	debugCamera_ = new DebugCamera(int(1280.0f), int(720.0f));
 
@@ -202,12 +202,11 @@ void GameScene::CheckAllCollisions() {
 		posB = bullet->GetWorldPosition();
 		radiusB = {3.0f, 3.0f, 3.0f};
 		Vector3 a2b = {
-		    (posA.x - posB.x) * (posA.x - posB.x), (posA.y - posB.y) * (posA.y - posB.y),
-		    (posA.z - posB.z) * (posA.z - posB.z)};
+		   powf((posA.x - posB.x),2), powf((posA.y - posB.y),2),powf((posA.z - posB.z),2)};
 		Vector3 a2br = {
-		    (radiusA.x + radiusB.x) * (radiusA.x + radiusB.x),
-		    (radiusA.y + radiusB.y) * (radiusA.y + radiusB.y),
-		    (radiusA.z + radiusB.z) * (radiusA.z + radiusB.z)};
+		    powf((radiusA.x + radiusB.x),2),
+		    powf((radiusA.y + radiusB.y),2),
+		    powf((radiusA.z + radiusB.z),2)};
 		if (a2b.x + a2b.y + a2b.z <= a2br.x || a2b.x + a2b.y + a2b.z <= a2br.y ||
 		    a2b.x + a2b.y + a2b.z <= a2br.z) {
 			bullet->OnCollision();
@@ -226,12 +225,10 @@ void GameScene::CheckAllCollisions() {
 			posB = bullet->GetWorldPosition();
 			radiusB = {3.0f, 3.0f, 3.0f};
 			Vector3 a2b = {
-			    (posA.x - posB.x) * (posA.x - posB.x), (posA.y - posB.y) * (posA.y - posB.y),
-			    (posA.z - posB.z) * (posA.z - posB.z)};
+			    powf((posA.x - posB.x), 2), powf((posA.y - posB.y), 2), powf((posA.z - posB.z), 2)};
 			Vector3 a2br = {
-			    (radiusA.x + radiusB.x) * (radiusA.x + radiusB.x),
-			    (radiusA.y + radiusB.y) * (radiusA.y + radiusB.y),
-			    (radiusA.z + radiusB.z) * (radiusA.z + radiusB.z)};
+			    powf((radiusA.x + radiusB.x), 2), powf((radiusA.y + radiusB.y), 2),
+			    powf((radiusA.z + radiusB.z), 2)};
 			if (a2b.x + a2b.y + a2b.z <= a2br.x || a2b.x + a2b.y + a2b.z <= a2br.y ||
 			    a2b.x + a2b.y + a2b.z <= a2br.z) {
 				enemy->OnCollision();
@@ -251,12 +248,10 @@ void GameScene::CheckAllCollisions() {
 			posB = bullet->GetWorldPosition();
 			radiusB = {3.0f, 3.0f, 3.0f};
 			Vector3 a2b = {
-			    (posA.x - posB.x) * (posA.x - posB.x), (posA.y - posB.y) * (posA.y - posB.y),
-			    (posA.z - posB.z) * (posA.z - posB.z)};
+			    powf((posA.x - posB.x), 2), powf((posA.y - posB.y), 2), powf((posA.z - posB.z), 2)};
 			Vector3 a2br = {
-			    (radiusA.x + radiusB.x) * (radiusA.x + radiusB.x),
-			    (radiusA.y + radiusB.y) * (radiusA.y + radiusB.y),
-			    (radiusA.z + radiusB.z) * (radiusA.z + radiusB.z)};
+			    powf((radiusA.x + radiusB.x), 2), powf((radiusA.y + radiusB.y), 2),
+			    powf((radiusA.z + radiusB.z), 2)};
 			if (a2b.x + a2b.y + a2b.z <= a2br.x || a2b.x + a2b.y + a2b.z <= a2br.y ||
 			    a2b.x + a2b.y + a2b.z <= a2br.z) {
 				bullet->OnCollision();
@@ -323,7 +318,7 @@ void GameScene::UpdateEnemyPopCommands() {
 			float z = (float)std::atof(word.c_str());
 			// 敵を発生させる
 			Vector3 tmp = {x, y, z};
-			EnemyOccurrence(model_, enemyTextureHandle_, tmp);
+			EnemyOccurrence(enemyModel_, enemyTextureHandle_, tmp);
 		} else if (word.find("WAIT") == 0) {
 			getline(line_stream, word, ',');
 			// 待ち時間
