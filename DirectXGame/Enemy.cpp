@@ -30,6 +30,13 @@ void Enemy::Update(){
 	//worldTransform_.translation_ = Calculation::Subtract(worldTransform_.translation_, velocity_);
 	worldTransform_.UpdateMatrix();
 	
+	if (player_->GetWorldPosition().z > GetWorldPosition().z) {	
+		fireTimer = kFireInterval;
+		if (player_->GetWorldPosition().z > GetWorldPosition().z + 20.0f) {
+			isDead_ = true;
+		}
+	}
+
 };
 
 void Enemy::Draw(ViewProjection viewProjection){

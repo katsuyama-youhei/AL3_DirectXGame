@@ -7,7 +7,7 @@ Player::~Player() {
 		delete bullet;
 	}
 	delete sprite2DReticle_;
-	// delete sprite2DReticleFront_;
+	 delete sprite2DReticleFront_;
 }
 
 void Player::Initialize(Model* model, const Vector3& position) {
@@ -24,14 +24,16 @@ void Player::Initialize(Model* model, const Vector3& position) {
 	worldTransform3DReticleFront_.Initialize();
 	// レティクル用テクスチャ取得
 	uint32_t textureReticle = TextureManager::Load("./Resources/point.png");
+
+	uint32_t textureReticleBack = TextureManager::Load("./Resources/pointback.png");
 	// スプライト生成
 	sprite2DReticle_ = Sprite::Create(
 	    textureReticle, Vector2(640.0f, 300.0f), Vector4(1.0f, 1.0f, 1.0f, 1.0f),
 	    Vector2(0.5f, 0.5f));
 
-	/*sprite2DReticleFront_ = Sprite::Create(
-	    textureReticle, Vector2(640.0f, 300.0f), Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-	    Vector2(0.5f, 0.5f));*/
+	sprite2DReticleFront_ = Sprite::Create(
+	    textureReticleBack, Vector2(640.0f, 300.0f), Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+	    Vector2(0.5f, 0.5f));
 
 	attackTimer = 60.0f;
 }
@@ -93,7 +95,7 @@ void Player::Update(const ViewProjection viewProjection) {
 	// 自機から3Dレティクルへの距離
 	const float kDistancePlayerTo3DReticle = 35.0f;
 	// 自機から3Dレティクルへのオフセット(Z+向き)
-	Vector3 offset = { 0,0,1.0f,};
+	Vector3 offset = { 0,0.0,1.0f,};
 
 	// 自機のワールド行列の回転を反映
 	offset = TransformNormal(offset, worldTransform_.matWorld_);
@@ -105,19 +107,19 @@ void Player::Update(const ViewProjection viewProjection) {
 	worldTransform3DReticle_.translation_ = Add(offset, worldTransform_.translation_);
 	worldTransform3DReticle_.UpdateMatrix();
 
-	/*const float kDistancePlayerTo3DReticleBack = 10.0f;
+	const float kDistancePlayerTo3DReticleBack = 10.0f;
 	Vector3 offsetBack = {0, 0, 1.0f};
 	offsetBack = TransformNormal(offsetBack, worldTransform_.matWorld_);
 	offsetBack = Multiply(kDistancePlayerTo3DReticleBack, Normlize(offsetBack));
 	worldTransform3DReticleFront_.translation_ = Add(offsetBack, GetWorldPosition());
-	worldTransform3DReticleFront_.UpdateMatrix();*/
+	worldTransform3DReticleFront_.UpdateMatrix();
 	// 3Dレティクルのワールド座標の計算より後に行う
 
 	// 3Dレティクルのワールド座標から2Dレティクルのスクリーン座標を計算
 	// 3Dレティクルのワールド座標を取得
 	//Vector3 positionReticle = Get3DReticleWorldPosition();
 
-	//Vector3 backPositionReticle = Get3DReticleFrontWorldPosition();
+	Vector3 backPositionReticle = Get3DReticleFrontWorldPosition();
 
 	// ビューポート行列
 	Matrix4x4 matViewport =
@@ -130,12 +132,12 @@ void Player::Update(const ViewProjection viewProjection) {
 	// ワールドスクリーン座標変換(ここで3Dから2Dになる)
 	//positionReticle = Transform(positionReticle, matViewProjectionViewport);
 
-	//backPositionReticle = Transform(backPositionReticle, matViewProjectionViewport);
+	backPositionReticle = Transform(backPositionReticle, matViewProjectionViewport);
 
 	// スプライトのレティクルに座標設定
 	//sprite2DReticle_->SetPosition(Vector2(positionReticle.x, positionReticle.y));
 
-	// sprite2DReticleFront_->SetPosition(Vector2(backPositionReticle.x, backPositionReticle.y));
+	sprite2DReticleFront_->SetPosition(Vector2(backPositionReticle.x, backPositionReticle.y));
 
 	if (!Input::GetInstance()->GetJoystickState(0, joyState)) {
 		Mouse2Reticle(viewProjection);
@@ -270,7 +272,7 @@ void Player::SetParent(const WorldTransform* parent) { worldTransform_.parent_ =
 
 void Player::DrawUI() {
 	sprite2DReticle_->Draw();
-	// sprite2DReticleFront_->Draw();
+	sprite2DReticleFront_->Draw();
 };
 
 void Player::Mouse2Reticle(ViewProjection viewProjection) {
