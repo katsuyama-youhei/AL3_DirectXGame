@@ -105,6 +105,19 @@ private: // メンバ変数
 	bool isDebygCameraActive_ = false;
 	DebugCamera* debugCamera_ = nullptr;
 
+	bool isStart;
+	bool isEnd;
+
+	int count;
+
+	uint32_t texend_ = 0;
+	Sprite* texSprite_ = nullptr;
+
+	uint32_t texstart_ = 0;
+	Sprite* texStart_ = nullptr;
+
+	uint32_t texA_ = 0;
+	Sprite* aSprite_ = nullptr;
 
 	/// <summary>
 	/// ゲームシーン用
