@@ -21,6 +21,9 @@ GameScene::~GameScene() {
 	for (EnemyBullet* bullet : enemyBullets_) {
 		delete bullet;
 	}
+	for (EnemyParticle* particle : enemyParticles_) {
+		delete particle;
+	}
 }
 
 void GameScene::Initialize() {
@@ -34,7 +37,7 @@ void GameScene::Initialize() {
 	model_ = Model::CreateFromOBJ("player", true);
 
 	// 敵のテクスチャ
-	enemyTextureHandle_ = TextureManager::Load("sentouki.png");
+	enemyTextureHandle_ = TextureManager::Load("uvChecker.png");
 	// 敵のモデル
 	enemyModel_ = Model::Create();
 
@@ -78,6 +81,7 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 
+
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_Q)) {
 		isDebygCameraActive_ = true;
@@ -109,6 +113,15 @@ void GameScene::Update() {
 		return false;
 	});
 
+	enemyParticles_.remove_if([](EnemyParticle* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
+
+
 	for (Enemy* enemy : enemies_) {
 		enemy->Update();
 	}
@@ -116,6 +129,9 @@ void GameScene::Update() {
 	for (EnemyBullet* bullet : enemyBullets_) {
 		// bullet->SetPlayer(player_);
 		bullet->Update();
+	}
+	for (EnemyParticle* particle : enemyParticles_) {
+		particle->Update();
 	}
 
 	CheckAllCollisions();
@@ -166,6 +182,9 @@ void GameScene::Draw() {
 	}
 	for (EnemyBullet* bullet : enemyBullets_) {
 		bullet->Draw(viewProjection_);
+	}
+	for (EnemyParticle* particle: enemyParticles_) {
+		particle->Draw(viewProjection_);
 	}
 	skydome_->Draw(viewProjection_);
 	// 3Dオブジェクト描画後処理
@@ -265,6 +284,8 @@ void GameScene::CheckAllCollisions() {
 
 void GameScene::AddEnemyBullet(EnemyBullet* enemyBullet) { enemyBullets_.push_back(enemyBullet); };
 
+void GameScene::AddEnemyParticle(EnemyParticle* enemyParticle) { enemyParticles_.push_back(enemyParticle); };
+
 void GameScene::LoadEnemyPopData() {
 	// ファイルを開く
 	std::ifstream file;
@@ -317,7 +338,8 @@ void GameScene::UpdateEnemyPopCommands() {
 			getline(line_stream, word, ',');
 			float z = (float)std::atof(word.c_str());
 			// 敵を発生させる
-			Vector3 tmp = {x, y, z};
+			Vector3 playerpos = player_->GetWorldPosition();
+			Vector3 tmp = {x, y, playerpos.z+z};
 			EnemyOccurrence(enemyModel_, enemyTextureHandle_, tmp);
 		} else if (word.find("WAIT") == 0) {
 			getline(line_stream, word, ',');

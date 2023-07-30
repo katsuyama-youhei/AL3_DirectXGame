@@ -4,6 +4,7 @@
 #include <assert.h>
 #include"EnemyBullet.h"
 #include<list>
+#include "EnemyParticle.h"
 
 // 前方宣言
 class GameScene;
@@ -27,7 +28,7 @@ public:
 	// 弾の発射
 	void Fire();
 
-	static const int kFireInterval = 60;
+	static const int kFireInterval = 240;
 	void ApproachInitialize();
 	// 別で宣言しているplayerをこのクラス内のplayerに代入
 	void SetPlayer(Player* player) { player_ = player; }
@@ -39,6 +40,9 @@ public:
 	void SetWorldTransformTranslation(Vector3 worldTransformTranslation) {
 		worldTransform_.translation_ = worldTransformTranslation;
 	}
+	void Hit() { hp -= 1; }
+
+	void HitParticle();
 
 private:
 	// ワールド変換データ
@@ -64,6 +68,8 @@ private:
 
 	// メンバ関数ポインタ
 	static void (Enemy::*pFunc[static_cast<size_t>(Phase::Leave) + 1])();
+
+	int hp = 5;
 };
 
 

@@ -62,6 +62,8 @@ public: // メンバ関数
 	// 敵発生
 	void EnemyOccurrence(Model* model, uint32_t textureHandle,Vector3& vector);
 
+	void AddEnemyParticle(EnemyParticle* enemyParticle);
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -92,6 +94,8 @@ private: // メンバ変数
 	size_t commandWaitTimer = 0;
 	// 敵弾
 	std::list<EnemyBullet*> enemyBullets_;
+
+	std::list<EnemyParticle*> enemyParticles_;
 	// 天球
 	Skydome* skydome_ = nullptr;
 	// レールカメラ
@@ -100,6 +104,7 @@ private: // メンバ変数
 	// デバッグカメラ
 	bool isDebygCameraActive_ = false;
 	DebugCamera* debugCamera_ = nullptr;
+
 
 	/// <summary>
 	/// ゲームシーン用

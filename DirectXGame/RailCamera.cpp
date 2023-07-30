@@ -14,27 +14,27 @@ void RailCamera::Update() {
 	// ワールドトランスフォームの角度の数値を加算したりする(回転)
 	worldTransform_.rotation_ = Add(worldTransform_.rotation_, rotationVelocity);
 	
-	// カメラの座標を画面表示する
-	ImGui::Begin("Camera");
-	// translationを表示
-	float inputFloat3[3] = {0, 0, 0};
-	inputFloat3[0] = worldTransform_.translation_.x;
-	inputFloat3[1] = worldTransform_.translation_.y;
-	inputFloat3[2] = worldTransform_.translation_.z;
-	ImGui::SliderFloat3("transform", inputFloat3, -5.0f, 5.0f);
-	worldTransform_.translation_.x = inputFloat3[0];
-	worldTransform_.translation_.y = inputFloat3[1];
-	worldTransform_.translation_.z = inputFloat3[2];
-	// rotationを表示
-	inputFloat3[0] = worldTransform_.rotation_.x;
-	inputFloat3[1] = worldTransform_.rotation_.y;
-	inputFloat3[2] = worldTransform_.rotation_.z;
-	ImGui::SliderFloat3("rotation", inputFloat3, -5.0f, 5.0f);
-	worldTransform_.rotation_.x = inputFloat3[0];
-	worldTransform_.rotation_.y = inputFloat3[1];
-	worldTransform_.rotation_.z = inputFloat3[2];
+	//// カメラの座標を画面表示する
+	//ImGui::Begin("Camera");
+	//// translationを表示
+	//float inputFloat3[3] = {0, 0, 0};
+	//inputFloat3[0] = worldTransform_.translation_.x;
+	//inputFloat3[1] = worldTransform_.translation_.y;
+	//inputFloat3[2] = worldTransform_.translation_.z;
+	//ImGui::SliderFloat3("transform", inputFloat3, -5.0f, 5.0f);
+	//worldTransform_.translation_.x = inputFloat3[0];
+	//worldTransform_.translation_.y = inputFloat3[1];
+	//worldTransform_.translation_.z = inputFloat3[2];
+	//// rotationを表示
+	//inputFloat3[0] = worldTransform_.rotation_.x;
+	//inputFloat3[1] = worldTransform_.rotation_.y;
+	//inputFloat3[2] = worldTransform_.rotation_.z;
+	//ImGui::SliderFloat3("rotation", inputFloat3, -5.0f, 5.0f);
+	//worldTransform_.rotation_.x = inputFloat3[0];
+	//worldTransform_.rotation_.y = inputFloat3[1];
+	//worldTransform_.rotation_.z = inputFloat3[2];
 
-	ImGui::End();
+	//ImGui::End();
 
 	// ワールドトランスフォームのワールド行列再計算
 	worldTransform_.matWorld_ = MakeAffineMatrix(

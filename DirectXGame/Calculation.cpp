@@ -4,6 +4,7 @@
 #include "Calculation.h"
 #include <cmath>
 #include"assert.h"
+#include "Vector2.h"
 
 // 加算
 Matrix4x4 Add(const Matrix4x4& m1, const Matrix4x4& m2) {

@@ -50,6 +50,8 @@ public:
 	// ゲームパッドの右スティックでレティクルを操作し表示
 	void Gamepad2Reticle(ViewProjection viewProjection);
 
+	void IsCheackReticle(Vector3& frontReticle,Vector3& pointRericle);
+
 private:
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;
@@ -68,5 +70,8 @@ private:
 	// 2Dレティクルの奥
 	Sprite* sprite2DReticleFront_ = nullptr;
 	float attackTimer;
+	float attack;
 	bool isAttack = false;
+	Vector2 spritePosition;
+	bool isOverlap = false;
 };

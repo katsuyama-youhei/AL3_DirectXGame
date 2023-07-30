@@ -7,7 +7,7 @@ Player::~Player() {
 		delete bullet;
 	}
 	delete sprite2DReticle_;
-	 delete sprite2DReticleFront_;
+	delete sprite2DReticleFront_;
 }
 
 void Player::Initialize(Model* model, const Vector3& position) {
@@ -26,16 +26,18 @@ void Player::Initialize(Model* model, const Vector3& position) {
 	uint32_t textureReticle = TextureManager::Load("./Resources/point.png");
 
 	uint32_t textureReticleBack = TextureManager::Load("./Resources/pointback.png");
+
 	// スプライト生成
 	sprite2DReticle_ = Sprite::Create(
-	    textureReticle, Vector2(640.0f, 300.0f), Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+	    textureReticle, Vector2(640.0f, 300.0f), Vector4(1.0f, 0.0f, 0.0f, 0.7f),
 	    Vector2(0.5f, 0.5f));
 
 	sprite2DReticleFront_ = Sprite::Create(
-	    textureReticleBack, Vector2(640.0f, 300.0f), Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+	    textureReticleBack, Vector2(640.0f, 300.0f), Vector4(1.0f, 1.0f, 1.0f, 0.5f),
 	    Vector2(0.5f, 0.5f));
 
-	attackTimer = 60.0f;
+	attack = 60.0f;
+	attackTimer = attack;
 }
 
 void Player::Update(const ViewProjection viewProjection) {
@@ -75,9 +77,9 @@ void Player::Update(const ViewProjection viewProjection) {
 
 	} else {
 		// ゲームパッド状態取得
-		//if (Input::GetInstance()->GetJoystickState(0, joyState)) {
-			move.x += (float)joyState.Gamepad.sThumbLX / SHRT_MAX * kCharacterSpeed;
-			move.y += (float)joyState.Gamepad.sThumbLY / SHRT_MAX * kCharacterSpeed;
+		// if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+		move.x += (float)joyState.Gamepad.sThumbLX / SHRT_MAX * kCharacterSpeed;
+		move.y += (float)joyState.Gamepad.sThumbLY / SHRT_MAX * kCharacterSpeed;
 		//}
 	}
 
@@ -93,14 +95,18 @@ void Player::Update(const ViewProjection viewProjection) {
 
 	// 自機のワールド座標から3Dレティクルのワールド座標を計算
 	// 自機から3Dレティクルへの距離
-	const float kDistancePlayerTo3DReticle = 35.0f;
+	const float kDistancePlayerTo3DReticle = 50.0f;
 	// 自機から3Dレティクルへのオフセット(Z+向き)
-	Vector3 offset = { 0,0.0,1.0f,};
+	Vector3 offset = {
+	    0,
+	    0.0,
+	    1.0f,
+	};
 
 	// 自機のワールド行列の回転を反映
 	offset = TransformNormal(offset, worldTransform_.matWorld_);
 
-		// ベクトルの長さを整える　
+	// ベクトルの長さを整える　
 	offset = Multiply(kDistancePlayerTo3DReticle, Normlize(offset));
 
 	// 3Dレティクルの座標を設定
@@ -117,7 +123,7 @@ void Player::Update(const ViewProjection viewProjection) {
 
 	// 3Dレティクルのワールド座標から2Dレティクルのスクリーン座標を計算
 	// 3Dレティクルのワールド座標を取得
-	//Vector3 positionReticle = Get3DReticleWorldPosition();
+	 //Vector3 positionReticle = Get3DReticleWorldPosition();
 
 	Vector3 backPositionReticle = Get3DReticleFrontWorldPosition();
 
@@ -130,12 +136,12 @@ void Player::Update(const ViewProjection viewProjection) {
 	    Multiply(viewProjection.matView, Multiply(viewProjection.matProjection, matViewport));
 
 	// ワールドスクリーン座標変換(ここで3Dから2Dになる)
-	//positionReticle = Transform(positionReticle, matViewProjectionViewport);
+	// positionReticle = Transform(positionReticle, matViewProjectionViewport);
 
 	backPositionReticle = Transform(backPositionReticle, matViewProjectionViewport);
 
 	// スプライトのレティクルに座標設定
-	//sprite2DReticle_->SetPosition(Vector2(positionReticle.x, positionReticle.y));
+	 //sprite2DReticle_->SetPosition(Vector2(positionReticle.x, positionReticle.y));
 
 	sprite2DReticleFront_->SetPosition(Vector2(backPositionReticle.x, backPositionReticle.y));
 
@@ -144,26 +150,40 @@ void Player::Update(const ViewProjection viewProjection) {
 	} else {
 		Gamepad2Reticle(viewProjection);
 	}
+	
+	Vector3 s = Vector3(spritePosition.x,spritePosition.y,1);
+	//s = Transform(s, matViewProjectionViewport);
 
-	// デバッグテキストの表示
-	ImGui::Begin("a");
-	inputFloat3[0] = worldTransform_.translation_.x;
-	inputFloat3[1] = worldTransform_.translation_.y;
-	inputFloat3[2] = worldTransform_.translation_.z;
-	ImGui::SliderFloat3("Player", inputFloat3, -30.0f, 30.0f);
-	worldTransform_.translation_.x = inputFloat3[0];
-	worldTransform_.translation_.y = inputFloat3[1];
-	worldTransform_.translation_.z = inputFloat3[2];
-	ImGui::End();
+	IsCheackReticle(backPositionReticle, s);
+	if (isOverlap) {
+	//	sprite2DReticle_->SetColor(Vector4(0.0f, 1.0f, 1.0f, 1.0f));
+		sprite2DReticleFront_->SetColor(Vector4(1.0f, 0.0f, 0.0f, 1.0f));
+		attack = 10.0f;
+	} else {
+	//	sprite2DReticle_->SetColor(Vector4(1.0f, 0.0f, 0.0f, 1.0f));
+		sprite2DReticleFront_->SetColor(Vector4(1.0f, 1.0f, 1.0f, 0.5f));
+		attack = 60.0f;
+	}
 
-	//const float kMoveLimitX = 30.0f;
-	//const float kMoveLimitY = 18.0f;
+	//// デバッグテキストの表示
+	//ImGui::Begin("a");
+	//inputFloat3[0] = worldTransform_.translation_.x;
+	//inputFloat3[1] = worldTransform_.translation_.y;
+	//inputFloat3[2] = worldTransform_.translation_.z;
+	//ImGui::SliderFloat3("Player", inputFloat3, -30.0f, 30.0f);
+	//worldTransform_.translation_.x = inputFloat3[0];
+	//worldTransform_.translation_.y = inputFloat3[1];
+	//worldTransform_.translation_.z = inputFloat3[2];
+	//ImGui::End();
 
-	//worldTransform_.translation_.x = max(worldTransform_.translation_.x, -kMoveLimitX);
-	//worldTransform_.translation_.x = min(worldTransform_.translation_.x, +kMoveLimitX);
+	// const float kMoveLimitX = 30.0f;
+	// const float kMoveLimitY = 18.0f;
 
-	//worldTransform_.translation_.y = max(worldTransform_.translation_.y, -kMoveLimitY);
-	//worldTransform_.translation_.y = min(worldTransform_.translation_.y, +kMoveLimitY);
+	// worldTransform_.translation_.x = max(worldTransform_.translation_.x, -kMoveLimitX);
+	// worldTransform_.translation_.x = min(worldTransform_.translation_.x, +kMoveLimitX);
+
+	// worldTransform_.translation_.y = max(worldTransform_.translation_.y, -kMoveLimitY);
+	// worldTransform_.translation_.y = min(worldTransform_.translation_.y, +kMoveLimitY);
 }
 
 void Player::Draw(ViewProjection viewProjection) {
@@ -171,7 +191,7 @@ void Player::Draw(ViewProjection viewProjection) {
 	for (PlayerBullet* bullet : bullets_) {
 		bullet->Draw(viewProjection);
 	}
-	model_->Draw(worldTransform3DReticle_, viewProjection);
+	//model_->Draw(worldTransform3DReticle_, viewProjection);
 }
 
 void Player::Rotate() {
@@ -234,7 +254,7 @@ void Player::Attack() {
 	if (isAttack) {
 		attackTimer--;
 		if (attackTimer <= 0) {
-			attackTimer = 60.0f;
+			attackTimer = attack;
 			isAttack = false;
 		}
 	}
@@ -332,46 +352,67 @@ void Player::Mouse2Reticle(ViewProjection viewProjection) {
 
 void Player::Gamepad2Reticle(ViewProjection viewProjection) {
 	// スプライトの現在座標を取得
-	Vector2 spritePosition = sprite2DReticle_->GetPosition();
+	spritePosition = sprite2DReticle_->GetPosition();
 
 	XINPUT_STATE joyState;
 
-	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
-		spritePosition.x += (float)joyState.Gamepad.sThumbRX / SHRT_MAX * 5.0f;
-		spritePosition.y -= (float)joyState.Gamepad.sThumbRY / SHRT_MAX * 5.0f;
-		// スプライトの座標変更を反映
-		sprite2DReticle_->SetPosition(spritePosition);
-
-		// ビューポート行列
-		Matrix4x4 matViewport =
-		    MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
-		// ビュープロジェクションビューポート合成行列
-		Matrix4x4 matVPV =
-		    Multiply(viewProjection.matView, Multiply(viewProjection.matProjection, matViewport));
-
-		// 合成乗列の逆上列を計算する
-		Matrix4x4 matInverseVPN = Inverse(matVPV);
-
-		// スクリーン座標(z=0ならニアクリップ面,z=1ならファークリップ面の座標)
-		Vector3 posNear =
-		    Vector3(sprite2DReticle_->GetPosition().x, sprite2DReticle_->GetPosition().y, 0);
-		Vector3 posFar =
-		    Vector3(sprite2DReticle_->GetPosition().x, sprite2DReticle_->GetPosition().y, 1);
-
-		// スクリーン座標系からワールド座標系へ
-		posNear = Transform(posNear, matInverseVPN);
-		posFar = Transform(posFar, matInverseVPN);
-
-		// マウスレイの方向
-		// posNearからposFarへのベクトルを計算
-		Vector3 mouseDirection = Subtract(posFar, posNear);
-		// ベクトルの正規化
-		mouseDirection = Normlize(mouseDirection);
-		// カメラから照準オブジェクトの距離
-		const float kDistanceTestObject = 100.0f;
-		worldTransform3DReticle_.translation_ =
-		    Add(posNear, Multiply(kDistanceTestObject, mouseDirection));
-		// 行列更新と転送
-		worldTransform3DReticle_.UpdateMatrix();
+	if (!Input::GetInstance()->GetJoystickState(0, joyState)) {
+		return;
 	}
+
+	spritePosition.x += (float)joyState.Gamepad.sThumbRX / SHRT_MAX * 5.0f;
+	spritePosition.y -= (float)joyState.Gamepad.sThumbRY / SHRT_MAX * 5.0f;
+	// スプライトの座標変更を反映
+	sprite2DReticle_->SetPosition(spritePosition);
+
+	// ビューポート行列
+	Matrix4x4 matViewport =
+	    MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
+	// ビュープロジェクションビューポート合成行列
+	Matrix4x4 matVPV =
+	    Multiply(viewProjection.matView, Multiply(viewProjection.matProjection, matViewport));
+
+	// 合成乗列の逆上列を計算する
+	Matrix4x4 matInverseVPN = Inverse(matVPV);
+
+	// スクリーン座標(z=0ならニアクリップ面,z=1ならファークリップ面の座標)
+	Vector3 posNear =
+	    Vector3(sprite2DReticle_->GetPosition().x, sprite2DReticle_->GetPosition().y, 0);
+	Vector3 posFar =
+	    Vector3(sprite2DReticle_->GetPosition().x, sprite2DReticle_->GetPosition().y, 1);
+
+	// スクリーン座標系からワールド座標系へ
+	posNear = Transform(posNear, matInverseVPN);
+	posFar = Transform(posFar, matInverseVPN);
+
+	// マウスレイの方向
+	// posNearからposFarへのベクトルを計算
+	Vector3 mouseDirection = Subtract(posFar, posNear);
+	// ベクトルの正規化
+	mouseDirection = Normlize(mouseDirection);
+	// カメラから照準オブジェクトの距離
+	const float kDistanceTestObject = 100.0f;
+	worldTransform3DReticle_.translation_ =
+	    Add(posNear, Multiply(kDistanceTestObject, mouseDirection));
+	// 行列更新と転送
+	worldTransform3DReticle_.UpdateMatrix();
 };
+
+void Player::IsCheackReticle(Vector3& frontReticle, Vector3& pointRericle) {
+	
+	if (pointRericle.x < frontReticle.x + (sprite2DReticleFront_->GetSize().x / 2.0f) -
+	                         (sprite2DReticle_->GetSize().x/2.0f) &&
+	    pointRericle.x > frontReticle.x - (sprite2DReticleFront_->GetSize().x / 2.0f) +
+	                         (sprite2DReticle_->GetSize().x / 2.0f)) {
+		if (pointRericle.y < frontReticle.y + (sprite2DReticleFront_->GetSize().y / 2.0f) -
+		                         (sprite2DReticle_->GetSize().y / 2.0f) &&
+		    pointRericle.y > frontReticle.y - (sprite2DReticleFront_->GetSize().y / 2.0f) +
+		                         (sprite2DReticle_->GetSize().y / 2.0f)) {
+			isOverlap = true;
+			
+			return;
+		}
+	}
+	isOverlap = false;
+	
+}
